@@ -1,0 +1,316 @@
+   {/* <View style={styles.list}>
+                                <Text style={styles.dateStyle}>{item.date}</Text>
+                                <View style={styles.todo}>
+                                    <Text style={styles.listTitle}> {item.title}</Text>
+                                    <Text style={styles.listDesc}> {item.desc}</Text>
+                                    <Text >{JSON.stringify(item.isDone)}</Text>
+                                    <Text>ID: {typeof item.id === 'string' ? item.id : JSON.stringify(item.id)}</Text>
+                                </View>
+                                <BouncyCheckbox
+                                    isChecked={item.isDone}
+                                    onPress={() => { toggleTodoDone(item.id, item.isDone) }}
+                                    fillColor='#29AB87' />
+                            </View> */}
+
+
+
+
+    // const deleteSwipe = () => {
+    //     return (
+    //         <TouchableOpacity>
+    //             <View style={styles.deleteContainer}>
+    //                 <Icon name='delete' size={25} style={styles.deleteIconStyle} color='red' />
+    //             </View>
+    //         </TouchableOpacity>
+    //     )
+    // }
+
+
+
+     // <GestureHandlerRootView>
+        //     <Swipeable renderRightActions={deleteSwipe}>
+        //         <View style={styles.list}>
+        //             <Text style={styles.dateStyle}>{date}</Text>
+        //             <View style={styles.todo}>
+        //                 <Text style={styles.listTitle}> {title}</Text>
+        //                 <Text style={styles.listDesc}> {description}</Text>
+        //             </View>
+        //             <BouncyCheckbox
+        //                 isChecked={isDone}
+        //                 onPress={() => onToggle(id, isDone)}
+        //                 fillColor='#29AB87'
+        //             />
+        //         </View>
+        //     </Swipeable>
+        // </GestureHandlerRootView>
+
+    const [time, setTime] = useState<Date>(initialDate);
+    const [openTimePicker, setOpenTimePicker] = useState<boolean>(false);
+
+ const handleDateChange = (text: string) => {
+        setDateText(text);
+        // Parse the date to a Date object if possible
+        const parsedDate = new Date(text);
+        if (!isNaN(parsedDate.getTime())) {
+            setDate(parsedDate);
+        }
+    };
+
+    const formatDate = (date: Date): string => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
+    const formatTime = (date: Date): string => {
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        return `${hours}:${minutes}`;
+    };
+
+
+             <View style={styles.dateContainer}>
+                    <TextInput
+                        style={[styles.inputStyle]}
+                        value={dateText}
+                        onChangeText={handleDateChange}
+                        placeholder="YYYY-MM-DD"
+                        keyboardType="numeric"
+                        cursorColor='#0047AB'
+                    />
+                    {/* <Text style={styles.inputStyle}> {dateText} </Text> */}
+                    <View style={styles.dateBtn}>
+                        <TouchableHighlight onPress={() => setOpen(true)}>
+                            <Icon name='calendar' size={20} style={styles.calendarIcon} color='#0047AB' />
+                        </TouchableHighlight>
+                        <DatePicker
+                            modal
+                            open={open}
+                            date={date}
+                            onConfirm={(selectedDate: Date) => {
+                                setOpen(false);
+                                setDate(selectedDate);
+                                setDateText(formatDate(selectedDate));
+                            }}
+                            onCancel={() => {
+                                setOpen(false);
+                            }}
+                            mode="date"
+                        />
+                    </View>
+                </View>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                import { Button, StyleSheet, Text, TextInput, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import React, { useState } from 'react'
+import DatePicker from 'react-native-date-picker'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import firestore from '@react-native-firebase/firestore';
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+
+const AddToDo = () => {
+
+    const initialDate = new Date();
+    const initialDateText = initialDate.toISOString().slice(0, 10);
+
+    const [date, setDate] = useState<Date>(initialDate);
+    const [dateText, setDateText] = useState<string>(initialDateText);
+    const [open, setOpen] = useState<boolean>(false);
+    const [titleText, onChangeTitleText] = useState<string>('');
+    const [descText, onChangeDescText] = useState<string>('');
+    const [time, setTime] = useState<Date>(initialDate);
+    const [openTimePicker, setOpenTimePicker] = useState<boolean>(false);
+    const [showPicker, setShowPicker] = useState<'date' | 'time' | null>(null);
+
+    const handleDateChange = (text: string) => {
+        setDateText(text);
+        // Parse the date to a Date object if possible
+        const parsedDate = new Date(text);
+        if (!isNaN(parsedDate.getTime())) {
+            setDate(parsedDate);
+        }
+    };
+
+    const formatDate = (date: Date): string => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
+    const formatTime = (date: Date): string => {
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        return `${hours}:${minutes}`;
+    };
+
+    const addButton = () => {
+        console.log('Button pressed');
+        console.log(dateText);
+        console.log(titleText);
+        console.log(descText);
+        firestore().collection('Todos')
+            .add({
+                title: titleText,
+                date: dateText,
+                desc: descText,
+                isDone: false
+            })
+            .then(() => {
+                console.log('Todo Created');
+                setDate(initialDate);
+                setDateText(initialDateText);
+                onChangeTitleText('');
+                onChangeDescText('');
+            })
+    }
+
+    return (
+        <View style={styles.container}>
+            {/* <Text style={styles.header}>New Task</Text> */}
+            <View style={styles.form}>
+                <Text style={styles.label}>Add Title</Text>
+                <TextInput style={styles.input} cursorColor='#0047AB' value={titleText} onChangeText={onChangeTitleText} />
+
+                <Text style={[styles.label]}>Date</Text>
+                <View style={styles.dateContainer}>
+                    <TextInput
+                        style={[styles.inputStyle]}
+                        value={dateText}
+                        onChangeText={handleDateChange}
+                        placeholder="YYYY-MM-DD"
+                        keyboardType="numeric"
+                        cursorColor='#0047AB'
+                    />
+                    {/* <Text style={styles.inputStyle}> {dateText} </Text> */}
+                    <View style={styles.dateBtn}>
+                        <TouchableHighlight onPress={() => setOpen(true)}>
+                            <Icon name='calendar' size={20} style={styles.calendarIcon} color='#0047AB' />
+                        </TouchableHighlight>
+                        <DateTimePicker
+
+
+                            testID="dateTimePicker"
+                            value={date}
+                            is24Hour={true}
+                            display="default"
+                            mode="date"
+                            onChange={(event: DateTimePickerEvent, selectedDate?: Date) => {
+                                setShowPicker(null);
+                                if (selectedDate) {
+                                    if (showPicker === 'date') {
+                                        setDate(selectedDate);
+                                        setDateText(formatDate(selectedDate));
+                                    } else if (showPicker === 'time') {
+                                        setTime(selectedDate);
+                                    }
+                                }
+                            }}
+                        />
+                    </View>
+                </View>
+
+
+                <Text style={[styles.label]}>Add Description</Text>
+                <TextInput style={styles.input1} cursorColor='#0047AB' multiline numberOfLines={3} maxLength={40} value={descText} onChangeText={onChangeDescText} />
+            </View>
+
+            <TouchableOpacity style={styles.addBtn} onPress={() => addButton()}>
+                <Text style={styles.addBtnTxt}>Add Note</Text>
+            </TouchableOpacity>
+        </View>
+    )
+}
+
+export default AddToDo
+
+const styles = StyleSheet.create({
+    container: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 10,
+        marginHorizontal: 10,
+        marginVertical: 40
+    },
+    header: {
+        fontSize: 18,
+        fontWeight: '600'
+    },
+    label: {
+        marginHorizontal: 15,
+        marginBottom: -8,
+        fontSize: 12,
+        fontWeight: '400',
+        color: '#606060'
+    },
+    dateContainer: {
+        flexDirection: 'row',
+        // justifyContent: 'center'
+    },
+    form: {
+        width: '100%'
+    },
+    inputStyle: {
+        // flex: 1,
+        width: 200,
+        marginHorizontal: 12,
+        marginVertical: 10,
+        borderRadius: 10,
+        backgroundColor: '#E9EAEC',
+        padding: 10
+    },
+    input: {
+        height: 40,
+        marginHorizontal: 12,
+        marginVertical: 10,
+        width: 250,
+        borderRadius: 10,
+        backgroundColor: '#E9EAEC',
+        padding: 10
+    },
+    input1: {
+        marginHorizontal: 12,
+        width: 270,
+        borderRadius: 10,
+        backgroundColor: '#E9EAEC',
+        marginVertical: 10,
+        padding: 10,
+        textAlignVertical: 'top',
+
+    },
+    dateBtn: {
+        paddingVertical: 10,
+        // width: '50%'
+    },
+    calendarIcon: {
+        padding: 10,
+        position: 'absolute',
+        // right: 20,
+    },
+    addBtn: {
+        marginVertical: 10,
+        backgroundColor: '#0047AB',
+        alignItems: 'center',
+        padding: 10,
+        borderRadius: 10,
+        width: '50%'
+    },
+    addBtnTxt: {
+        color: '#FFF',
+        fontSize: 15,
+        fontWeight: '600'
+    },
+})
