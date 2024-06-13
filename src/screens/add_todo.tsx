@@ -4,7 +4,6 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    TouchableHighlight,
     StyleSheet,
     Image,
     KeyboardAvoidingView,
@@ -36,6 +35,7 @@ const AddToDo = ({ navigation }: Props) => {
     const [titleText, onChangeTitleText] = useState<string>('');
     const [descText, onChangeDescText] = useState<string>('');
     const [titleError, setTitleError] = useState<string | null>(null);
+    const [descError, setDescError] = useState<string | null>(null);
 
     const handleDateChange = (text: string) => {
         setDateText(text);
@@ -63,8 +63,13 @@ const AddToDo = ({ navigation }: Props) => {
         if (titleText.trim() === '') {
             setTitleError('Title is required');
             return;
-        } else {
+        } else if (descText.trim() === '') {
+            setDescError('Description is required');
+            return;
+        }
+        else {
             setTitleError(null);
+            setDescError(null);
         }
 
         console.log('Button pressed');
@@ -154,9 +159,10 @@ const AddToDo = ({ navigation }: Props) => {
                                 </View>
                             </View>
 
+
                             <Text style={styles.label}>Add Description</Text>
                             <TextInput
-                                style={styles.input1}
+                                style={[styles.input1, descError ? styles.inputError : null]}
                                 cursorColor='#0047AB'
                                 multiline
                                 numberOfLines={3}
@@ -164,6 +170,7 @@ const AddToDo = ({ navigation }: Props) => {
                                 value={descText}
                                 onChangeText={onChangeDescText}
                             />
+                            {descError && <Text style={styles.errorText}>{descError}</Text>}
                         </View>
 
                         <TouchableOpacity style={styles.addBtn} onPress={addButton}>

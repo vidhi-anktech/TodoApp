@@ -29,7 +29,10 @@ const Header = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.titleText}>To do</Text>
+            <View style={styles.titleContainer}>
+                <Text style={styles.titleText}>Your</Text>
+                <Text style={styles.titleMainText}>Tasks</Text>
+            </View>
             <View style={styles.dateContainer}>
                 <Text style={styles.dateText}>{dateText}</Text>
                 <Icon name='calendar' style={styles.calendarIcon} size={20} color='#0047AB' />
@@ -42,14 +45,28 @@ export default Header
 
 const styles = StyleSheet.create({
     container: {
-        padding: 20,
+        paddingRight: 20,
+        paddingTop: 20,
+        paddingLeft: 30,
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
-    titleText: {
+    titleContainer: {
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    titleMainText: {
         fontSize: 30,
         fontWeight: '600',
-        color: '#000'
+        color: '#000',
+        top: -10,
+        letterSpacing: 2
+    },
+    titleText: {
+        fontSize: 20,
+        fontWeight: '500',
+        color: '#71797E',
+        letterSpacing: 1.5
     },
     dateContainer: {
         paddingVertical: 10,

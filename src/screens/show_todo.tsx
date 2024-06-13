@@ -34,10 +34,15 @@ const ShowToDo: React.FC<HomeProps> = ({ navigation }) => {
                 const fetchedTodos: Todo[] = [];
 
                 querySnapshot.forEach(documentSnapshot => {
-                    fetchedTodos.push({
-                        ...documentSnapshot.data(),
-                        id: documentSnapshot.id,
-                    } as Todo);
+
+
+                    const todo = documentSnapshot.data() as Todo;
+                    if (!todo.isDone) { // Only add tasks that are not completed
+                        fetchedTodos.push({
+                            ...todo,
+                            id: documentSnapshot.id,
+                        });
+                    }
                 });
 
                 const sortedTodos = fetchedTodos.sort((a, b) => {
@@ -98,6 +103,7 @@ const ShowToDo: React.FC<HomeProps> = ({ navigation }) => {
 
 
     return (
+
         <View style={styles.container}>
             <Header />
             {groupedTodos.length === 0 ? (
@@ -138,7 +144,6 @@ const ShowToDo: React.FC<HomeProps> = ({ navigation }) => {
             >
                 <Icon name='plus' size={30} color='#FFF' />
             </TouchableOpacity>
-
         </View>
     );
 };

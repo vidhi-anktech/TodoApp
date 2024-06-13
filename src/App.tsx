@@ -23,7 +23,9 @@ const Tab = createMaterialTopTabNavigator<RootTabParamList>();
 
 function Home() {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator screenOptions={{
+      swipeEnabled: false, // Disable swiping gesture for tabs
+    }}>
       <Tab.Screen name="TodoList" component={ShowToDo} options={{ title: 'To-Do List' }} />
       <Tab.Screen name="Completed" component={CompletedTask} options={{ title: 'Completed Tasks' }} />
     </Tab.Navigator>
