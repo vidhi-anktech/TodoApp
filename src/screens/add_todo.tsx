@@ -174,7 +174,7 @@ const AddToDo = ({ navigation }: Props) => {
                         </View>
 
                         <TouchableOpacity style={styles.addBtn} onPress={addButton}>
-                            <Text style={styles.addBtnTxt}>Add Note</Text>
+                            <Text style={styles.addBtnTxt}>Save</Text>
                         </TouchableOpacity>
 
                         {showPicker && (
@@ -264,7 +264,8 @@ const styles = StyleSheet.create({
         height: 40,
         borderRadius: 10,
         backgroundColor: '#E9EAEC',
-        padding: 10
+        padding: 10,
+        width: 300
     },
     input1: {
         marginHorizontal: 15,
@@ -273,19 +274,19 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         padding: 10,
         textAlignVertical: 'top',
+        width: 300
     },
     dateContainer: {
         flexDirection: 'row',
         alignItems: 'center',
     },
     inputStyle: {
-        // flex: 1,
         marginBottom: 8,
-        width: 200,
-        marginHorizontal: 12,
+        marginHorizontal: 15,
         borderRadius: 10,
         backgroundColor: '#E9EAEC',
-        padding: 10
+        padding: 10,
+        width: 300
     },
     dateBtn: {
         marginLeft: 0,
@@ -302,11 +303,13 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 10,
         width: '50%',
-        top: -100
+        top: -100,
+        right: 10
     },
     addBtnTxt: {
         color: '#fff',
         fontSize: 16,
+        fontWeight: '600'
     },
     inputError: {
         borderColor: 'red',

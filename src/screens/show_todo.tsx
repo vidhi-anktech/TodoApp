@@ -37,7 +37,7 @@ const ShowToDo: React.FC<HomeProps> = ({ navigation }) => {
 
 
                     const todo = documentSnapshot.data() as Todo;
-                    if (!todo.isDone) { // Only add tasks that are not completed
+                    if (!todo.isDone) {
                         fetchedTodos.push({
                             ...todo,
                             id: documentSnapshot.id,
